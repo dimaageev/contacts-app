@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  FlatList,
+  View,
+  ScrollView,
+  Text,
+  StatusBar,
+  SectionList,
+  SafeAreaView,
+} from "react-native";
+
+import contacts, { compareNames } from "./contacts";
+import ContactsList from "./ContactsList";
 
 export default function App() {
+  const [showContacts, setShowContacts] = useState(false);
+  const [sortedContacts, setSortedContacts] = useState(contacts);
+
+  const toggleContacts = () => {
+    setShowContacts((prev) => !prev);
+  };
+
+  const sort = () => {
+    setSortedContacts((prev) => [...prev.sort(compareNames)]);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Button title="toggle contacts" onPress={toggleContacts} />
+      <Button title="sort" onPress={sort} />
+      {showContacts && <ContactsList contacts={sortedContacts} />}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    marginTop: StatusBar.currentHeight + 10,
   },
 });
